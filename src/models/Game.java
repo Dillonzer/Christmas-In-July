@@ -17,13 +17,12 @@ public class Game {
 		}
 	}
 
-	public int roundTrackerUpdate() {
+	public void roundTrackerUpdate() {
 		roundTracker++;
 		if (roundTracker.equals(TOTAL_ROUNDS)) {
 			roundTracker = -1;
 		}
-
-		return roundTracker++;
+		roundTracker++;
 	}
 
 }
