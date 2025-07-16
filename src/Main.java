@@ -10,10 +10,10 @@ public class Main {
 		for (int i = 0; i < gameCount; i++) {
 			Gameplay gameplay = new Gameplay();
 			gameplay.setGame(new Game());
-			gameplay.game.populateUsers();
+			gameplay.game.populateGame();
 
 
-			while (gameplay.game.gifts > 0) {
+			while (!gameplay.game.gifts.isEmpty()) {
 				gameplay.selectRandomAction();
 				turns++;
 			}

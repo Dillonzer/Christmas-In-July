@@ -1,6 +1,7 @@
 import lombok.Getter;
 import lombok.Setter;
 import models.Game;
+import models.Gift;
 import models.User;
 
 import java.util.List;
@@ -14,30 +15,45 @@ public class Gameplay {
 
 	public void takeOne(User user) {
 		if (!user.hasGift) {
-			user.hasGift = true;
-			game.gifts = game.gifts - 1;
+			user.gift = getRandomGift();
 		}
 	}
 
 	public void trade(User user) {
-		User tradeUser = getRandomUser();
+		User tradeUser = getRandomUserWithGift();
+
+		if (tradeUser == null) {
+			return;
+		}
 
 		if (!user.hasGift) {
 			takeOne(user);
-			//TODO: would trade the object here
 		}
 
-		//TODO: Swap objects w/ swap function
-	}
+		swap(tradeUser, user);
 
-	public void shiftLeft() {
-		//TODO: With a Gift Object, you would just do it on that rather than the User object
-		game.users.add(game.users.removeFirst());
 	}
 
 	public void shiftRight() {
-		//TODO: With a Gift Object, you would just do it on that rather than the User object
-		game.users.addFirst(game.users.removeLast());
+		for (Integer i = 0; i < game.users.size(); i++) {
+			if (i.equals(0)) {
+				swap(game.users.getLast(), game.users.getFirst());
+				continue;
+			}
+
+			swap(game.users.get(i), game.users.get(i++));
+		}
+	}
+
+	public void shiftLeft() {
+		for (Integer i = game.users.size() - 1; i > 0; i--) {
+			if (i.equals(game.users.size() - 1)) {
+				swap(game.users.getLast(), game.users.getFirst());
+				continue;
+			}
+
+			swap(game.users.get(i), game.users.get(i--));
+		}
 	}
 
 	public void steal(User user) {
@@ -47,9 +63,9 @@ public class Gameplay {
 			if (stealUser == null) {
 				return;
 			}
-			
-			stealUser.hasGift = false;
-			user.hasGift = true;
+
+			user.gift = stealUser.gift;
+			stealUser.gift = null;
 		}
 	}
 
@@ -106,6 +122,20 @@ public class Gameplay {
 		Integer n = rand.nextInt(withGift.size());
 
 		return withGift.get(n);
+	}
+
+	private Gift getRandomGift() {
+		Random rand = new Random();
+		Integer n = rand.nextInt(game.gifts.size());
+		Gift returnGift = game.gifts.get(n);
+		game.gifts.remove(n.intValue());
+		return returnGift;
+	}
+
+	private void swap(User user1, User user2) {
+		Gift temp = user1.gift;
+		user1.gift = user2.gift;
+		user2.gift = temp;
 	}
 
 }

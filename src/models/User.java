@@ -4,5 +4,6 @@ import lombok.Data;
 
 @Data
 public class User {
-	public boolean hasGift = false;
+	public Gift gift;
+	public boolean hasGift = gift != null;
 }
